@@ -80,6 +80,33 @@ func FromContext(ctx context.Context) Logger {
 	return Root()
 }
 
+func Info(message string, field Field) {
+	Root().Info(message, field)
+}
+func Warn(message string, field Field) {
+	Root().Warn(message, field)
+}
+func Debug(message string, field Field) {
+	Root().Debug(message, field)
+}
+func Error(message string, field Field) {
+	Root().Error(message, field)
+}
+func DPanic(message string, field Field) {
+	Root().DPanic(message, field)
+}
+func Fatal(message string, field Field) {
+	Root().Fatal(message, field)
+}
+func Panic(message string, field Field) {
+	Root().Panic(message, field)
+}
+func With(field Field) {
+	Root().With(field)
+}
+
+
+
 func LoadEnvConfig() *Config {
 	var conf Config
 	envconfig.Load(&conf)
