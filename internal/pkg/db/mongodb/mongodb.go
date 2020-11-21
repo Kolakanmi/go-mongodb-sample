@@ -22,10 +22,14 @@ func LoadConfigFromFile() *Config {
 	return &config
 }
 
-func ConnectDB(conf *Config) (*mongo.Client, context.CancelFunc, error){
-	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+func ConnectDB(conf *Config) (*mongo.Database, error){
+	ctx, _ := context.WithTimeout(context.Background(), 15*time.Second)
 	uri := fmt.Sprintf("mongodb+srv://%s:%s@cluster0.fsldx.mongodb.net/%s?retryWrites=true&w=majority", conf.Username,
 		conf.Password, conf.Database)
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
-	return client, cancel, err
+	if err != nil {
+		return nil, err
+	}
+	database := client.Database(conf.Database)
+	return database, err
 }
