@@ -14,7 +14,7 @@ type (
 		JWTExpiry time.Duration `envconfig:"JWT_EXPIRY"`
 	}
 	Claims struct {
-		jwt.StandardClaims
+		StandardClaims
 		UserID string
 		FirstName string
 		LastName string
