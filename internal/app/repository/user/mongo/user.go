@@ -3,6 +3,7 @@ package mongo
 import (
 	"context"
 	"github.com/Kolakanmi/go-mongodb-sample/internal/app/model"
+	"github.com/Kolakanmi/go-mongodb-sample/internal/pkg/util/timeutil"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -63,15 +64,41 @@ func (r *UserRepository) FindByEmail(ctx context.Context, email string) (*model.
 }
 
 func (r *UserRepository) UpdatePassword(ctx context.Context, id, password string) error {
-	panic("implement me")
+	filter := bson.M{"_id": id}
+	update := bson.M{
+		"$set": bson.M{
+			"password": password,
+			"updated_at": timeutil.TimePointer(),
+		},
+	}
+	_, err := r.collection().UpdateOne(ctx, filter, update)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func (r *UserRepository) Update(ctx context.Context, user *model.User) error {
-	panic("implement me")
+func (r *UserRepository) Update(ctx context.Context, id string, user *model.User) error {
+	filter := bson.M{"_id": id}
+	update := bson.M{
+		"$set": bson.M{
+			"first_name": user.FirstName,
+			"last_name": user.LastName,
+		},
+	}
+	_, err := r.collection().UpdateOne(ctx, filter, update)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (r *UserRepository) Delete(ctx context.Context, id string) error {
-	panic("implement me")
+	_, err := r.collection().DeleteOne(ctx, bson.M{"_id": id})
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (r *UserRepository) collection() *mongo.Collection {
