@@ -15,7 +15,7 @@ type Config struct {
 	Database string `envconfig:"MONGODB_DATABASE"`
 	Address string `envconfig:"MONGODB_ADDRESS"`
 }
-
+//LoadConfigFromFile - for mongodb
 func LoadConfigFromFile() *Config {
 	var config Config
 	envconfig.Load(&config)

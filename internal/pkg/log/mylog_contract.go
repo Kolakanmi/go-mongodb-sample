@@ -8,6 +8,6 @@ type Logger interface {
 	DPanic(message string, field Field)
 	Fatal(message string, field Field)
 	Panic(message string, field Field)
-	With(field Field)
+	With(field Field) Logger
 	ToSugar()
 }

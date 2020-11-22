@@ -27,7 +27,7 @@ const (
 
 var root Logger
 
-func NewLogger(conf Config){
+func SetLogger(conf Config){
 	out := outputFromEnv(conf.FilePath)
 	writeSync := zapcore.AddSync(out)
 	//multipleWrite := zapcore.NewMultiWriteSyncer(writeSync)
@@ -101,8 +101,12 @@ func Fatal(message string, field Field) {
 func Panic(message string, field Field) {
 	Root().Panic(message, field)
 }
-func With(field Field) {
-	Root().With(field)
+func With(field Field) Logger {
+	return Root().With(field)
+}
+
+func WithContext(ctx context.Context) Logger {
+	return FromContext(ctx)
 }
 
 
