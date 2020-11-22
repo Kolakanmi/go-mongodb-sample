@@ -31,7 +31,7 @@ func New(conf *Config) (http.Handler, error)  {
 	}
 	for _, route := range conf.Routes {
 		h := route.Handler
-		//Last middleware will be the innermost middleware and executed first.
+		//Last middleware will be the innermost middleware and executed last.
 		for i := len(route.Middlewares) -1; i >= 0; i-- {
 			h = route.Middlewares[i](h)
 		}
