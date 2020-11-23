@@ -12,3 +12,4 @@ type IAuth interface {
 type service interface {
 	Auth(ctx context.Context, email, password string) (string, *model.User, error)
 }
+

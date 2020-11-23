@@ -7,17 +7,22 @@ import (
 	"time"
 )
 
+var (
+	JWTIssuer = "mongo-sample-app"
+	JWTExpiry = 15 * time.Minute
+)
+
 type (
 	Config struct {
 		JWTSecretKey string `envconfig:"JWT_SECRET"`
-		JWTIssuer string `envconfig:"JWT_ISSUER"`
-		JWTExpiry time.Duration `envconfig:"JWT_EXPIRY"`
+
 	}
 	Claims struct {
 		StandardClaims
 		UserID string
 		FirstName string
 		LastName string
+		Email string
 		Roles []string
 	}
 	Generator struct {

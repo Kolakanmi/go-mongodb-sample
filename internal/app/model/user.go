@@ -7,6 +7,6 @@ type (
 		LastName string `json:"lastName" bson:"last_name"`
 		Email string `json:"email" bson:"email"`
 		Password string `json:"password" bson:"password"`
-
+		Roles []string `json:"roles" bson:"roles"`
 	}
 )
