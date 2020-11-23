@@ -1,10 +1,23 @@
 package auth
 
 import (
+	"context"
 	"github.com/Kolakanmi/go-mongodb-sample/internal/app/model"
 	"github.com/Kolakanmi/go-mongodb-sample/internal/pkg/jwt"
 	"time"
 )
+
+func NewContext(ctx context.Context, user *model.User) context.Context {
+	return context.WithValue(ctx, authContextKey, user)
+}
+
+func FromContext(ctx context.Context) *model.User {
+	v, ok := ctx.Value(authContextKey).(*model.User)
+	if ok {
+		return v
+	}
+	return nil
+}
 
 func userAndAuthIDToClaims(user *model.User, authID string) jwt.Claims {
 	return jwt.Claims{
@@ -23,7 +36,7 @@ func userAndAuthIDToClaims(user *model.User, authID string) jwt.Claims {
 	}
 }
 
-func claimsToUserAndAuthID(claims jwt.Claims) (*model.User, string) {
+func claimsToUserAndAuthID(claims *jwt.Claims) (*model.User, string) {
 	return &model.User{
 		Base:      model.Base{
 			ID: claims.UserID,

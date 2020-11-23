@@ -41,10 +41,10 @@ func UserFriendlyError(text string, status int)  error {
 	}
 }
 
-func IsAppError(err error) bool {
+func IsAppError(err error) (*AppError, bool) {
 	appError := new(AppError)
 	if errors.As(err, &appError) {
-		return true
+		return appError, true
 	}
-	return false
+	return nil, false
 }

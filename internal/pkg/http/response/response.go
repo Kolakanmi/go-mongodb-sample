@@ -2,6 +2,7 @@ package response
 
 import (
 	"encoding/json"
+	"github.com/Kolakanmi/go-mongodb-sample/internal/pkg/apperror"
 	"net/http"
 )
 
@@ -41,6 +42,14 @@ func OK(message string, data interface{}) *response {
 	return newResponse(true, message, nil, data, http.StatusOK)
 }
 
-func Fail(err error, status int) *response {
-	return newResponse(false,"", err, nil, status)
+func Fail(err error) *response {
+	appErr, ok := apperror.IsAppError(err)
+	if ok {
+		return newResponse(false,"", err, nil, appErr.Type())
+	}
+	return newResponse(false,"", err, nil, 500)
+}
+
+func FailWriter(w http.ResponseWriter, err error) {
+	_ = Fail(err).ToJSON(w)
 }
