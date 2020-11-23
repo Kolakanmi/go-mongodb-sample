@@ -1,9 +1,9 @@
 package health
 
 import (
+	"github.com/Kolakanmi/go-mongodb-sample/internal/pkg/apperror"
 	"github.com/Kolakanmi/go-mongodb-sample/internal/pkg/http/handler"
 	"github.com/Kolakanmi/go-mongodb-sample/internal/pkg/http/response"
-	"github.com/pkg/errors"
 	"net/http"
 	"sync"
 )
@@ -24,7 +24,7 @@ func Readiness() http.Handler {
 		isReadyMutex.RLock()
 		defer isReadyMutex.RUnlock()
 		if !isReady {
-			return response.Fail(errors.New("server not ready"), 503).ToJSON(w)
+			return response.Fail(apperror.UserFriendlyError("Server not ready", 503)).ToJSON(w)
 		}
 		return response.OK("Server is up!", nil).ToJSON(w)
 	})

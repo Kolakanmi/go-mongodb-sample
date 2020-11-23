@@ -3,7 +3,6 @@ package auth
 import (
 	"github.com/Kolakanmi/go-mongodb-sample/internal/app/repository/auth"
 	"github.com/Kolakanmi/go-mongodb-sample/internal/pkg/apperror"
-	"github.com/Kolakanmi/go-mongodb-sample/internal/pkg/http/handler"
 	"github.com/Kolakanmi/go-mongodb-sample/internal/pkg/http/response"
 	"github.com/Kolakanmi/go-mongodb-sample/internal/pkg/jwt"
 	"github.com/Kolakanmi/go-mongodb-sample/internal/pkg/log"
@@ -66,17 +65,20 @@ func RequiredAuthMiddleware(next http.Handler, roles []string) http.Handler  {
 		user := FromContext(r.Context())
 		if user == nil {
 			response.FailWriter(w, apperror.UserFriendlyError("Unauthorized", 401))
+			return
 		}
 		if len(roles) > 0 && len(user.Roles) == 0 {
 			response.FailWriter(w, apperror.UserFriendlyError("Unauthorized", 401))
+			return
 		}
 		for _, authRole := range roles {
 			for _, userRole := range user.Roles {
 				if authRole == userRole {
 					next.ServeHTTP(w,r)
+					return
 				}
 			}
 		}
-		return response.Fail(apperror.UserFriendlyError("Unauthorized", 401)).ToJSON(w)
+		response.FailWriter(w, apperror.UserFriendlyError("Unauthorized", 401))
 	})
 }
