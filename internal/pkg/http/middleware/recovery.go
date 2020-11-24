@@ -20,7 +20,7 @@ func Recover(next http.Handler) http.Handler {
 				stack := make([]byte, 4<<10) //4kB
 				length := runtime.Stack(stack, false)
 				log.WithContext(r.Context()).Error("Panic recovery", log.Field{"err": err, "stack": string(stack[:length])})
-				_ = response.Fail(apperror.ErrInternalServer, 500).ToJSON(w)
+				_ = response.Fail(apperror.ErrInternalServer).ToJSON(w)
 			}
 		}()
 		next.ServeHTTP(w, r)

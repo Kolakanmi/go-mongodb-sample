@@ -38,9 +38,7 @@ func userAndAuthIDToClaims(user *model.User, authID string) jwt.Claims {
 
 func claimsToUserAndAuthID(claims *jwt.Claims) (*model.User, string) {
 	return &model.User{
-		Base:      model.Base{
-			ID: claims.UserID,
-		},
+		ID: claims.UserID,
 		FirstName: claims.FirstName,
 		LastName:  claims.LastName,
 		Email:     claims.Email,

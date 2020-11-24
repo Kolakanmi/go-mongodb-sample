@@ -17,7 +17,7 @@ func NewAuthRepository(database *mongo.Database) *AuthRepository  {
 
 func (a *AuthRepository) Create(ctx context.Context, auth *model.Auth) (string, error) {
 	_ = a.DeleteByUserID(ctx, auth.UserID)
-	auth.Base = model.SetBase()
+	auth.SetBase()
 	_, err := a.collection().InsertOne(ctx, auth)
 	if err != nil {
 		return "", err
@@ -27,22 +27,22 @@ func (a *AuthRepository) Create(ctx context.Context, auth *model.Auth) (string, 
 
 func (a *AuthRepository) FindByUserID(ctx context.Context, userID string) (*model.Auth, error) {
 	filter := bson.M{"user_id": userID}
-	var auth *model.Auth
-	err := a.collection().FindOne(ctx, filter).Decode(auth)
+	var auth model.Auth
+	err := a.collection().FindOne(ctx, filter).Decode(&auth)
 	if err != nil {
 		return nil, err
 	}
-	return auth, nil
+	return &auth, nil
 }
 
 func (a *AuthRepository) FindByID(ctx context.Context, id string) (*model.Auth, error) {
 	filter := bson.M{"_id": id}
-	var auth *model.Auth
-	err := a.collection().FindOne(ctx, filter).Decode(auth)
+	var auth model.Auth
+	err := a.collection().FindOne(ctx, filter).Decode(&auth)
 	if err != nil {
 		return nil, err
 	}
-	return auth, nil
+	return &auth, nil
 }
 
 func (a *AuthRepository) DeleteByID(ctx context.Context, id string) error {
