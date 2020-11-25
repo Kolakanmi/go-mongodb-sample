@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/Kolakanmi/go-mongodb-sample/internal/pkg/envconfig"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -32,4 +33,8 @@ func ConnectDB(conf *Config) (*mongo.Database, error){
 	}
 	database := client.Database(conf.Database)
 	return database, err
+}
+
+func IsErrNotFound(err error) bool {
+	return errors.Is(err, mongo.ErrNoDocuments)
 }

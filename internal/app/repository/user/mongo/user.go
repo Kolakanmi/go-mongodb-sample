@@ -26,7 +26,7 @@ func (r *UserRepository) Create(ctx context.Context, user *model.User) (string, 
 }
 
 func (r *UserRepository) FindByID(ctx context.Context, id string) (*model.User, error) {
-	filter := bson.M{"_id": id, "roles": bson.M{"$type": "array"}}
+	filter := bson.M{"_id": id}
 	var user model.User
 	err := r.collection().FindOne(ctx, filter).Decode(&user)
 	if err != nil {
