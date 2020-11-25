@@ -26,3 +26,8 @@ func (u *User) SetBase()  {
 	u.UpdatedAt = created
 	u.DeletedAt = nil
 }
+
+func (u *User) Strip() *User {
+	u.Password = ""
+	return u
+}
