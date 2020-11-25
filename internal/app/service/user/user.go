@@ -60,32 +60,61 @@ func (s *Service) Register(ctx context.Context, req reqresponse.RequestRegister)
 
 }
 
-func (s Service) Create(ctx context.Context, user *model.User) (string, error) {
-	panic("implement me")
+func (s *Service) Create(ctx context.Context, user *model.User) (string, error) {
+	id, err := s.repo.Create(ctx, user)
+	if err != nil {
+		log.WithContext(ctx).Error("failed to insert user", log.Field{"err": err})
+		return "", apperror.UserFriendlyError("could not complete request", 500)
+	}
+	return id, nil
 }
 
-func (s Service) FindByID(ctx context.Context, id string) (*model.User, error) {
-	panic("implement me")
+func (s *Service) FindByID(ctx context.Context, id string) (*model.User, error) {
+	user, err := s.repo.FindByID(ctx, id)
+	if err != nil {
+		if mongodb.IsErrNotFound(err) {
+			log.WithContext(ctx).Error("user with id does not exist", log.Field{"id": id,"err": err})
+			return nil, apperror.UserFriendlyError("could not complete request", 500)
+		}
+		log.WithContext(ctx).Error("error fetching user", log.Field{"id": id,"err": err})
+		return nil, apperror.UserFriendlyError("could not complete request", 500)
+	}
+	return user.Strip(), nil
 }
 
 func (s Service) FindAll(ctx context.Context) ([]*model.User, error) {
-	panic("implement me")
-}
-
-func (s Service) ResetPassword(ctx context.Context, req reqresponse.RequestGeneratePasswordResetToken) error {
-	panic("implement me")
+	users, err := s.repo.FindAll(ctx)
+	if err != nil {
+		if mongodb.IsErrNotFound(err) {
+			log.WithContext(ctx).Error("user with id does not exist", log.Field{"err": err})
+			return nil, apperror.UserFriendlyError("could not complete request", 500)
+		}
+		log.WithContext(ctx).Error("error fetching user", log.Field{"err": err})
+		return nil, apperror.UserFriendlyError("could not complete request", 500)
+	}
+	strippedUsers := make([]*model.User, 0)
+	for _,v := range users {
+		strippedUsers = append(strippedUsers, v.Strip())
+	}
+	return strippedUsers, nil
 }
 
 func (s Service) Update(ctx context.Context, user *model.User) error {
-	panic("implement me")
-}
-
-func (s Service) UpdatePassword(ctx context.Context, req reqresponse.RequestUpdatePassword) {
-	panic("implement me")
+	err := s.repo.Update(ctx, user.ID, user)
+	if err != nil {
+		log.WithContext(ctx).Error("error updating user", log.Field{"id": user.ID,"err": err})
+		return apperror.UserFriendlyError("could not complete request", 500)
+	}
+	return nil
 }
 
 func (s Service) Delete(ctx context.Context, id string) error {
-	panic("implement me")
+	err := s.repo.Delete(ctx, id)
+	if err != nil {
+		log.WithContext(ctx).Error("error deleting user", log.Field{"id": id,"err": err})
+		return apperror.UserFriendlyError("could not complete request", 500)
+	}
+	return nil
 }
 
 func (s *Service) generatePassword(password string) (string, error)  {
