@@ -1,0 +1,10 @@
+{"level":"info","ts":"2020-11-26T22:07:02.256114897+01:00","caller":"log/log.go:39","msg":"string"}
+{"level":"info","ts":"2020-11-26T22:07:02.256222308+01:00","caller":"log/myLog.go:32","msg":"Initializing http routing...","service":"mongo-sample"}
+{"level":"info","ts":"2020-11-26T22:07:11.19941378+01:00","caller":"log/myLog.go:32","msg":"started","service":"mongo-sample","path":"/readiness","method":"GET","stage":"request"}
+{"level":"info","ts":"2020-11-26T22:07:11.199591924+01:00","caller":"log/myLog.go:32","msg":"request finished","service":"mongo-sample","path":"/readiness","method":"GET","status":200,"response_time":0.000167529,"stage":"response"}
+{"level":"info","ts":"2020-11-26T22:07:16.167868574+01:00","caller":"log/myLog.go:32","msg":"started","service":"mongo-sample","path":"/api/v1/register","method":"POST","stage":"request"}
+{"level":"info","ts":"2020-11-26T22:07:19.058857087+01:00","caller":"log/myLog.go:32","msg":"request finished","service":"mongo-sample","path":"/api/v1/register","method":"POST","status":200,"response_time":2.890866859,"stage":"response"}
+{"level":"info","ts":"2020-11-26T22:09:27.035168591+01:00","caller":"log/myLog.go:32","msg":"started","service":"mongo-sample","method":"POST","path":"/api/v1/auth","stage":"request"}
+{"level":"info","ts":"2020-11-26T22:09:28.218423685+01:00","caller":"log/myLog.go:32","msg":"request finished","service":"mongo-sample","method":"POST","path":"/api/v1/auth","status":200,"response_time":1.18322069,"stage":"response"}
+{"level":"info","ts":"2020-11-26T22:10:30.975159455+01:00","caller":"log/myLog.go:32","msg":"started","service":"mongo-sample","path":"/api/v1/users","method":"GET","stage":"request"}
+{"level":"info","ts":"2020-11-26T22:10:31.167919354+01:00","caller":"log/myLog.go:32","msg":"request finished","service":"mongo-sample","path":"/api/v1/users","method":"GET","status":200,"response_time":0.192737888,"stage":"response"}

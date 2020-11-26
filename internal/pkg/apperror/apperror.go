@@ -10,7 +10,7 @@ type (
 	}
 )
 
-var ErrInternalServer = errors.New("nternal server error")
+var ErrInternalServer = errors.New("internal server error")
 
 func (a AppError) Error() string{
 	return a.text

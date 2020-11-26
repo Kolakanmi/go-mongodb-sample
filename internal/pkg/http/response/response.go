@@ -27,12 +27,16 @@ func (r response) ToJSON(w http.ResponseWriter) error{
 }
 
 func newResponse(success bool, message string, err error, data interface{}, status int) *response {
+	errS := ""
+	if err != nil {
+		errS = err.Error()
+	}
 	return &response{
 		Body:       &responseBody{
 			Success: success,
 			Message: message,
 			Data:    data,
-			Error: err.Error(),
+			Error: errS,
 		},
 		StatusCode: status,
 	}

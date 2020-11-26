@@ -65,10 +65,12 @@ func RequiredAuthMiddleware(roles []string) func(http.Handler) http.Handler  {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			user := FromContext(r.Context())
 			if user == nil {
+				log.WithContext(r.Context()).Error("unauthorized", log.Field{})
 				response.FailWriter(w, apperror.UserFriendlyError("Unauthorized", 401))
 				return
 			}
 			if len(roles) > 0 && len(user.Roles) == 0 {
+				log.WithContext(r.Context()).Error("unauthorized", log.Field{})
 				response.FailWriter(w, apperror.UserFriendlyError("Unauthorized", 401))
 				return
 			}
