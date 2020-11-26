@@ -52,8 +52,12 @@ func UserAuthMiddleware(verifier jwt.Verifier, authRepo auth.IAuthRepository) fu
 				next.ServeHTTP(w, r)
 				return
 			}
+			l := log.FromContext(r.Context())
+			l.With(log.Field{"user_id": user.ID})
 			newContext := NewContext(r.Context(), user)
 			r = r.WithContext(newContext)
+			r = r.WithContext(log.NewContext(r.Context(), l))
+			log.WithContext(r.Context()).With(log.Field{"user_id": user.ID, "user_name": user.FirstName + " " + user.LastName}).Info("user authorized", log.Field{})
 			next.ServeHTTP(w,r)
 			return
 		})

@@ -52,9 +52,9 @@ func NewRouter() (http.Handler, error) {
 	rConf.Routes = routes
 	rConf.GlobalMiddlewares = []router.Middleware{
 		middleware.Recover,
+		log2.NewHTTPContextHandler(log2.Root()),
 		auth2.UserAuthMiddleware(jwtGen, authRepo),
 		middleware.StatusResponseWriter,
-		log2.NewHTTPContextHandler(log2.Root()),
 		middleware.HTTPRequestResponseInfo(nil),
 	}
 
