@@ -60,25 +60,27 @@ func UserAuthMiddleware(verifier jwt.Verifier, authRepo auth.IAuthRepository) fu
 	}
 }
 
-func RequiredAuthMiddleware(next http.Handler, roles []string) http.Handler  {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		user := FromContext(r.Context())
-		if user == nil {
-			response.FailWriter(w, apperror.UserFriendlyError("Unauthorized", 401))
-			return
-		}
-		if len(roles) > 0 && len(user.Roles) == 0 {
-			response.FailWriter(w, apperror.UserFriendlyError("Unauthorized", 401))
-			return
-		}
-		for _, authRole := range roles {
-			for _, userRole := range user.Roles {
-				if authRole == userRole {
-					next.ServeHTTP(w,r)
-					return
+func RequiredAuthMiddleware(roles []string) func(http.Handler) http.Handler  {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			user := FromContext(r.Context())
+			if user == nil {
+				response.FailWriter(w, apperror.UserFriendlyError("Unauthorized", 401))
+				return
+			}
+			if len(roles) > 0 && len(user.Roles) == 0 {
+				response.FailWriter(w, apperror.UserFriendlyError("Unauthorized", 401))
+				return
+			}
+			for _, authRole := range roles {
+				for _, userRole := range user.Roles {
+					if authRole == userRole {
+						next.ServeHTTP(w,r)
+						return
+					}
 				}
 			}
-		}
-		response.FailWriter(w, apperror.UserFriendlyError("Unauthorized", 401))
-	})
+			response.FailWriter(w, apperror.UserFriendlyError("Unauthorized", 401))
+		})
+	}
 }

@@ -15,6 +15,10 @@ type Service struct {
 	repo user.IUserRepository
 }
 
+func NewUserService(repo user.IUserRepository) *Service {
+	return &Service{repo: repo}
+}
+
 func (s *Service) Auth(ctx context.Context, email, password string) (*model.User, error) {
 	user, err := s.repo.FindByEmail(ctx, email)
 	if err != nil {
